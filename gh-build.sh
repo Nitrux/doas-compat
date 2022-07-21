@@ -1,21 +1,16 @@
-#! /bin/sh
+#! /bin/bash
 
-apt -qq update
-apt -qq -yy install equivs curl git
+set -x
 
-deps=$(sed -e '/^#.*$/d; /^$/d; /^\s*$/d' package/dependencies | paste -sd ,)
-git_commit=$(git rev-parse --short HEAD)
+### Basic Packages
+apt -qq -yy install equivs git devscripts lintian --no-install-recommends
 
-> configuration printf "%s\n" \
-	"Section: misc" \
-	"Priority: optional" \
-	"Homepage: https://nxos.org" \
-	"Package: doas-compat" \
-	"Version: 0.0.1-$git_commit" \
-	"Maintainer: Uri Herrera <uri_herrera@nxos.org>" \
-	"Depends: $deps" \
-	"Provides: sudo" \
-	"Architecture: amd64" \
-	"Description: Package to resolve dependency when removing sudo."
+### Install Dependencies
+mk-build-deps -i -t "apt-get --yes" -r
 
-equivs-build configuration
+### Build Deb
+debuild -b -uc -us
+
+### Move Deb to current directory because debuild decided
+### that it was a GREAT IDEA TO PUT THE FILE ONE LEVEL ABOVE
+mv ../*.deb .

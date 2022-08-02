@@ -1,6 +1,6 @@
-# Doas compat [![Build Status](https://travis-ci.org/Nitrux/doas-compat.svg?branch=master)](https://travis-ci.org/Nitrux/doas-compat)
+# doas Compatibility
 
-Package to solve dependency of sudo.
+Package to satisfy dependency of sudo when using doas.
 
 # Issues
 If you find problems with the contents of this repository please create an issue.
